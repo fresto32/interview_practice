@@ -11,9 +11,9 @@ bool string_has_unique_chars(string stu) {
   char_hash.fill(false);
 
   for (int i = 0; i < stu.length(); i++) {
-    if (char_hash[(int) stu[i]] != false) {
+    if (char_hash[stu[i]] != false) {
       return false;
-    } else char_hash[(int) stu[i]] = true;
+    } else char_hash[stu[i]] = true;
   }
   return true;
 }
