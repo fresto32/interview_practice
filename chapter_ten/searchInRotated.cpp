@@ -1,5 +1,36 @@
 #include <iostream>
 
+
+int search(int a[], int left, int right, int x) {
+  int mid = (left + right) / 2;
+  if (x == a[mid]) return mid;
+  if (right < left) return -1;
+
+  if (a[left] < a[mid]) { //left is ordered
+    if(x >= a[left] && x < a[mid])
+      return search(a, left, mid-1, x);
+    else 
+      return search(a, mid+1, right, x);
+    
+  } else if (a[left] > a[mid]) { //right is ordered
+    if (x > a[mid] && x <= a[right])  
+      return search(a, mid+1, right, x);
+    else 
+      return search(a, left, mid-1, x);
+    
+  } else if (a[left] == a[mid]) { //left or right is repeating
+    if (a[mid] != a[right]) { // right is different, search it
+      return search(a, mid + 1, right, x);
+    } else { // else search both
+      int result = search(a, left, mid - 1, x);
+      if (result == -1) return search(a, mid + 1, right, x);
+      else return result;
+    }
+  }
+  return -1;
+}
+    
+
 int searchRotatedArray(int a[], int x, int n) {
   int low = 0;
   int hi = n - 1;
@@ -26,5 +57,6 @@ int searchRotatedArray(int a[], int x, int n) {
 int main() {
   int arr[] = {6,1,2,3,4,5};
   std::cout << searchRotatedArray(arr, 5, 6) << std::endl;
+  std::cout << search(arr, 0, 5, 5) << std::endl;
   return 0;
 }
