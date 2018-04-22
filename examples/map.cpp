@@ -16,5 +16,9 @@ int main() {
   map<int, struct container> m;
   m[1] = a;
 
+  map<double, map<double, int> > l;
+  l[1.01][1] = 1;
+  cout << l[1.01][1] << endl;
+
   return 0;
 }
