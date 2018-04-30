@@ -10,27 +10,29 @@ struct list {
 void reverseEveryK(struct list **h, int k) {
   struct list *start = (*h);
   struct list *curr = *h;
-  struct list *prev = nullptr;
+  struct list *prev = (*h);
   struct list *prev_start = nullptr;
   struct list *next = nullptr;
   while (curr->next) {
     start = curr;
-    cout << "start: " << start->val << endl;
-    prev = nullptr;
     for (int i = 0; i < k; i++) {
-      cout << "curr: " << curr->val << endl;
       next = curr->next;
       curr->next = prev;
       prev = curr;
       if (!next) break;
       curr = next;
     }
+    if (prev_start) {
+      prev_start->next = prev;
+    } else {
+      (*h) = prev;
+    }
+    prev_start = start;
     if (!next) break;
     start->next = curr;
-    cout << "start->next->val: " << start->next->val << endl;
+    prev = nullptr;
   }
-  cout << "returned" << endl;
-
+  curr = (*h);
   for (int i = 0; i < 4; i++) {
     cout << curr->val << endl;
     curr = curr->next;
