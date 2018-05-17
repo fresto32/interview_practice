@@ -1,73 +1,58 @@
-#include <unordered_map>
-#include <vector>
 #include <iostream>
+#include <vector>
 #include <utility>
 
 using namespace std;
 
-// O(Pairs + Names) function
+vector<pair<int, int> > bestSeqAtIndex(vector<pair<int, int> > &arr, 
+    vector<vector<pair<int, int> > > &sols, int index) {
+  vector<pair<int, int> > best_seq;
 
-unordered_map<string, int*> mapBuilder(unordered_map<string, int> &freq,
-    vector<pair<string, string> > &syn) {
-  unordered_map<string, int*> hash;
-
-  for (int i = 0; i < syn.size(); i++) {
-    string t1 = syn[i].first;
-    string t2 = syn[i].second;
-    if (!hash.count(t1) && !hash.count(t2)) {
-      int *ptr = new int;
-      *ptr = freq[t1] + freq[t2];
-      hash[t1] = ptr;
-      hash[t2] = ptr;
-    } else if (!hash.count(t1) || !hash.count(t2)) {
-      string contained = (hash.count(t1)) ? t1 : t2;
-      string noncontained = (hash.count(t1)) ? t2 : t1;
-
-      *hash[contained] += freq[noncontained];
-      hash[noncontained] = hash[contained];
-    } else {
-      *hash[t1] += *hash[t2];
-      hash[t2] = hash[t1];
+  for (int i = 0; i < index; i++) {
+    vector<pair<int, int> > sol = sols[i];
+    if (arr[index].first < sol[sol.size()-1].first && 
+        arr[index].second < sol[sol.size()-1].second) {
+      if (sol.size() > best_seq.size()) best_seq = sol;
     }
   }
+  best_seq.push_back(arr[index]);
 
-  for (unordered_map<string, int>::iterator it = freq.begin(); 
-      it != freq.end(); it++) {
-    if (!hash.count(it->first)) {
-      int *ptr = new int;
-      *ptr = it->second;
-      hash[it->first] = ptr;
-    }
+  cout << endl;
+  cout << endl;
+  cout << endl;
+  for (int i = 0; i < best_seq.size(); i++) cout << best_seq[i].first << " " <<
+   best_seq[i].second << endl;
+  cout << endl;
+  cout << endl;
+  cout << endl;
+
+  return best_seq;
+}
+
+vector<pair<int, int> > longestSequence(vector<pair<int, int> > &arr) {
+  vector<vector<pair<int, int> > > sols;
+  vector<pair<int, int> > best_seq;
+
+  for (int i = 0; i < arr.size(); i++) {
+    vector<pair<int, int> > longest_at_ind = bestSeqAtIndex(arr, sols, i);
+    sols.push_back(longest_at_ind);
+    if (longest_at_ind.size() > best_seq.size()) best_seq = longest_at_ind;
   }
-  return hash;
+  for (int i = 0; i < best_seq.size(); i++) cout << best_seq[i].first << " " <<
+   best_seq[i].second << endl;
+  return best_seq;
 }
 
 int main() {
-  // Testing 
-  vector<pair<string, string> > syn;
-  syn.push_back(make_pair("John", "Jon"));
-  syn.push_back(make_pair("John", "J"));
-  syn.push_back(make_pair("Jo", "Joe"));
-  syn.push_back(make_pair("John", "Joe"));
-  syn.push_back(make_pair("Miguel", "Mig"));
+  vector<pair<int, int> > arr;
+  arr.push_back(make_pair(1,1));
+  arr.push_back(make_pair(2,2));
+  arr.push_back(make_pair(5,5));
+  arr.push_back(make_pair(0,0));
 
-  unordered_map<string, int> freq;
-  freq["John"] = 1;
-  freq["Jon"] = 1;
-  freq["J"] = 1;
-  freq["Jo"] = 1;
-  freq["Joe"] = 1;
-  freq["Miguel"] = 2;
-  freq["Mig"] = 2;
-  freq["Taj"] = 1;
-
-  unordered_map<string, int*> k = mapBuilder(freq, syn);
-
-  string temp;
-  while (true) {
-    cin >> temp;
-    cout << *k[temp] << endl;
-  }
+  vector<pair<int, int> > k = longestSequence(arr);
+  cout << endl << endl;
+  for (int i = 0; i < k.size(); i++) cout << k[i].first << " " << 
+   k[i].second << endl;
   return 0;
 }
-
